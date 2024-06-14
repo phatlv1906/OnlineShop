@@ -38,6 +38,30 @@ public class productDao {
 		}
 		return listpro;
 	}
+	public List<product> getAllProduct(){
+		List<product> listpro = new ArrayList<product>();
+		
+		try {
+			conn = JDBCUtil.getConnection();
+			String sql = "Select * from product";
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				listpro.add(new product(rs.getInt(1), 
+						rs.getString(2), 
+						rs.getString(3), 
+						rs.getDouble(4), 
+						rs.getString(5), 
+						rs.getInt(6), 
+						rs.getInt(7), 
+						rs.getInt(8)));
+			}
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listpro;
+	}
 	
 	public List<product> getTop4BestProduct(){
 		List<product> listpro = new ArrayList<product>();
@@ -64,13 +88,14 @@ public class productDao {
 		return listpro;
 	}
 	public product getTop1BestProduct(){
-		product pro = new product();
+		product pro = null;
 		try {
 			conn = JDBCUtil.getConnection();
 			String sql = "Select * from product order by Amount desc limit 1";
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
 			if(rs.next()) {
+				pro = new product();
 				pro.setId(rs.getInt(1));
 				pro.setName(rs.getString(2));
 				pro.setDescription(rs.getString(3));
@@ -86,11 +111,80 @@ public class productDao {
 		}
 		return pro;
 	}
-	public static void main(String[] args) {
-		productDao prodao = new productDao();
-		List<product> listpro = prodao.getTop4BestProduct();
-		for (product product : listpro) {
-			System.out.println(product.getName());
+	public product getProductById(String id){
+		product pro = null;
+		try {
+			conn = JDBCUtil.getConnection();
+			String sql = "Select * from product where productId = ? ";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				pro = new product();
+				pro.setId(rs.getInt(1));
+				pro.setName(rs.getString(2));
+				pro.setDescription(rs.getString(3));
+				pro.setProprice(rs.getDouble(4));
+				pro.setImgLink(rs.getString(5));
+				pro.setCategoryId(rs.getInt(6));
+				pro.setSellerId(rs.getInt(7));
+				pro.setAmount(rs.getInt(8));
+			}
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		return pro;
+	}
+	public List<product> filterProductByCategory(String cateId){
+		List<product> listPro = new ArrayList<product>();
+		try {
+			conn = JDBCUtil.getConnection();
+			String sql = "Select * from product where categoryId = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, cateId);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				listPro.add(new product(rs.getInt(1), 
+						rs.getString(2), 
+						rs.getString(3), 
+						rs.getDouble(4), 
+						rs.getString(5), 
+						rs.getInt(6), 
+						rs.getInt(7), 
+						rs.getInt(8)));
+			}
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listPro;
+	}
+	public List<product> filterProductByCategory(int cateId){
+		List<product> listPro = new ArrayList<product>();
+		try {
+			conn = JDBCUtil.getConnection();
+			String sql = "Select * from product where categoryId = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, cateId);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				listPro.add(new product(rs.getInt(1), 
+						rs.getString(2), 
+						rs.getString(3), 
+						rs.getDouble(4), 
+						rs.getString(5), 
+						rs.getInt(6), 
+						rs.getInt(7), 
+						rs.getInt(8)));
+			}
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listPro;
+	}
+	public static void main(String[] args) {
+
 	}
 }

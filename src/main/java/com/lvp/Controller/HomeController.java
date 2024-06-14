@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.lvp.Dao.categoryDao;
 import com.lvp.Dao.productDao;
+import com.lvp.Model.category;
 import com.lvp.Model.product;
 @WebServlet(urlPatterns = {"/home", "/trangchu"})
 public class HomeController extends HttpServlet {
@@ -30,9 +32,13 @@ public class HomeController extends HttpServlet {
 		List<product> list4Best = prodao.getTop4BestProduct();
 		//san pham ban nhieu nhat
 		product bestpro = prodao.getTop1BestProduct();
+		//Lay category
+		categoryDao categoryDao = new categoryDao();
+		List<category> listCategories = categoryDao.getCategory();
 		req.setAttribute("list4", list4Product);
 		req.setAttribute("list4best", list4Best);
 		req.setAttribute("probest", bestpro);
+		req.setAttribute("listcategory", listCategories);
 		RequestDispatcher requestDispatcher = req.getRequestDispatcher("/views/home.jsp");
 		requestDispatcher.forward(req, resp);
 	}
